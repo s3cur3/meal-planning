@@ -67,8 +67,10 @@ defmodule MpWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{MpWeb.UserAuth, :ensure_authenticated}] do
       live "/meals", MealLive.Index, :index
-      live "/meals/new", MealLive.Form, :new
-      live "/meals/:id/edit", MealLive.Form, :edit
+      live "/meals/new", MealLive.Index, :new
+      live "/meals/:slug_or_id/edit-listing", MealLive.Index, :edit
+      live "/meals/:slug_or_id", MealLive.Show, :show
+      live "/meals/:slug_or_id/edit", MealLive.Show, :edit
 
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email

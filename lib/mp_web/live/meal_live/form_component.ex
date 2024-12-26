@@ -19,7 +19,7 @@ defmodule MpWeb.MealLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label="Name" required />
         <.input field={@form[:url]} type="text" label="Url" />
         <.input
           field={@form[:images]}
@@ -73,7 +73,7 @@ defmodule MpWeb.MealLive.FormComponent do
   end
 
   defp save_meal(socket, :new, meal_params) do
-    case Meals.create_meal(meal_params) do
+    case Meals.create_meal(meal_params, socket.assigns.current_user) do
       {:ok, meal} ->
         notify_parent({:saved, meal})
 

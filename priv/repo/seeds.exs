@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+Mp.Accounts.register_user(%{
+  email: "tyler@tylerayoung.com",
+  password: "testing!1234",
+  password_confirmation: "testing!1234"
+})

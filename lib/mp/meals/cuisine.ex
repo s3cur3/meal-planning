@@ -1,9 +1,12 @@
 defmodule Mp.Meals.Cuisine do
   use Mp.Schema
   import Ecto.Changeset
+  alias Mp.Accounts.User
 
-  schema "cuisines" do
+  typed_schema "cuisines" do
     field :name, :string
+
+    belongs_to :user, User
 
     timestamps()
   end
@@ -11,7 +14,7 @@ defmodule Mp.Meals.Cuisine do
   @doc false
   def changeset(cuisine, attrs) do
     cuisine
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :user_id])
+    |> validate_required([:name, :user_id])
   end
 end

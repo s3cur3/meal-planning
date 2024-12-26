@@ -3,9 +3,12 @@ defmodule Mp.Repo.Migrations.CreateCuisines do
 
   def change do
     create table(:cuisines) do
-      add :name, :string
+      add :name, :string, null: false
+      add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()
     end
+
+    create index(:cuisines, [:user_id])
   end
 end

@@ -92,6 +92,8 @@ defmodule MpWeb do
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())
+
+      defp noreply(socket), do: {:noreply, socket}
     end
   end
 

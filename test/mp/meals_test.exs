@@ -2,17 +2,20 @@ defmodule Mp.MealsTest do
   use Mp.DataCase
 
   alias Mp.Meals
+  alias Mp.Meals.Meal
+  alias Mp.AccountsFixtures
 
   describe "meals" do
-    alias Mp.Meals.Meal
-
     import Mp.MealsFixtures
 
     @invalid_attrs %{name: nil, url: nil, images: nil, desired_frequency_days: nil}
 
-    test "list_meals/0 returns all meals" do
-      meal = meal_fixture()
-      assert Meals.list_meals() == [meal]
+    test "list_meals/1 returns all a user's meals" do
+      user = AccountsFixtures.user_fixture()
+      other_user = AccountsFixtures.user_fixture()
+      meal = meal_fixture(user)
+      assert Meals.list_meals(user) == [meal]
+      assert Meals.list_meals(other_user) == []
     end
 
     test "get_meal!/1 returns the meal with given id" do
@@ -21,22 +24,38 @@ defmodule Mp.MealsTest do
     end
 
     test "create_meal/1 with valid data creates a meal" do
-      valid_attrs = %{name: "some name", url: "some url", images: ["option1", "option2"], desired_frequency_days: 42}
+      user = AccountsFixtures.user_fixture()
 
-      assert {:ok, %Meal{} = meal} = Meals.create_meal(valid_attrs)
+      valid_attrs = %{
+        name: "some name",
+        url: "some url",
+        images: ["option1", "option2"],
+        desired_frequency_days: 42,
+        user: user
+      }
+
+      assert {:ok, %Meal{} = meal} = Meals.create_meal(valid_attrs, user)
       assert meal.name == "some name"
       assert meal.url == "some url"
       assert meal.images == ["option1", "option2"]
       assert meal.desired_frequency_days == 42
+      assert meal.user_id == user.id
     end
 
     test "create_meal/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Meals.create_meal(@invalid_attrs)
+      user = AccountsFixtures.user_fixture()
+      assert {:error, %Ecto.Changeset{}} = Meals.create_meal(@invalid_attrs, user)
     end
 
     test "update_meal/2 with valid data updates the meal" do
       meal = meal_fixture()
-      update_attrs = %{name: "some updated name", url: "some updated url", images: ["option1"], desired_frequency_days: 43}
+
+      update_attrs = %{
+        name: "some updated name",
+        url: "some updated url",
+        images: ["option1"],
+        desired_frequency_days: 43
+      }
 
       assert {:ok, %Meal{} = meal} = Meals.update_meal(meal, update_attrs)
       assert meal.name == "some updated name"

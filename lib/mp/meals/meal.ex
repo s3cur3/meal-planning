@@ -1,13 +1,14 @@
 defmodule Mp.Meals.Meal do
   use Mp.Schema
   import Ecto.Changeset
-  alias Mp.Users.User
 
-  schema "meals" do
-    field :name, :string
+  alias Mp.Accounts.User
+
+  typed_schema "meals" do
+    field :name, :string, null: false
     field :url, :string
-    field :images, {:array, :string}
-    field :desired_frequency_days, :integer
+    field :images, {:array, :string}, default: []
+    field :desired_frequency_days, :integer, default: 30
 
     belongs_to :user, User
 
@@ -17,7 +18,13 @@ defmodule Mp.Meals.Meal do
   @doc false
   def changeset(meal, attrs) do
     meal
-    |> cast(attrs, [:name, :url, :images, :desired_frequency_days])
-    |> validate_required([:name, :url, :images, :desired_frequency_days])
+    |> cast(attrs, [:name, :url, :images, :desired_frequency_days, :user_id])
+    |> validate_required([:name, :images, :user_id])
+  end
+
+  defimpl Phoenix.Param do
+    def to_param(struct) do
+      Mp.Utils.Slug.url_slug(struct)
+    end
   end
 end

@@ -28,6 +28,9 @@ defmodule MpWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import MpWeb.ConnCase
+      import MpWeb.LiveViewHelpers
+      import Phoenix.LiveViewTest
+      import PhoenixTest
     end
   end
 
